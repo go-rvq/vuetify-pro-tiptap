@@ -144,7 +144,13 @@ export const jsonValue = {
             width: 200,
             height: null,
             display: 'right'
-          }
+          },
+          content: [
+            {
+              type: 'text',
+              text: 'Image caption'
+            }
+          ]
         }
       ]
     },

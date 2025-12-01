@@ -53,6 +53,8 @@ const locale: Record<string, string> = {
   'editor.image.dialog.form.alt': '说明',
   'editor.image.dialog.form.aspectRatio': '锁定原有长宽比',
   'editor.image.dialog.form.file': '文件',
+  'editor.image.dialog.form.caption': '标签',
+  'editor.image.dialog.form.captionDisabled': '标签已禁用',
   'editor.image.dialog.button.apply': '应用',
   'editor.video.tooltip': '视频',
   'editor.video.dialog.title': '插入视频',

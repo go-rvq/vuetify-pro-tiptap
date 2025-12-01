@@ -53,6 +53,8 @@ const locale: Record<string, string> = {
   'editor.image.dialog.form.alt': 'Alt',
   'editor.image.dialog.form.aspectRatio': 'Original-Seitenverhältnis beibehalten',
   'editor.image.dialog.form.file': 'Datei',
+  'editor.image.dialog.form.caption': 'Etikett',
+  'editor.image.dialog.form.captionDisabled': 'Etikett deaktiviert',
   'editor.image.dialog.button.apply': 'Anwenden',
   'editor.video.tooltip': 'Video',
   'editor.video.dialog.title': 'Video einfügen',

@@ -41,6 +41,7 @@ import {
   mdiFullscreen,
   mdiFullscreenExit,
   mdiImagePlus,
+  mdiImageText,
   mdiLinkVariantOff,
   mdiLinkVariantPlus,
   mdiMinus,
@@ -114,6 +115,7 @@ export interface IconsOptions extends ToolbarIconsOptions {
   aspectRatio: string
   delete: string
   text: string
+  imageLabel: string
 
   // heading
   h1: string
@@ -169,6 +171,7 @@ const icons: IconsOptions = {
   link: mdiLinkVariantPlus,
   fileImagePlus: mdiFileImagePlus,
   image: mdiImagePlus,
+  imageLabel: mdiImageText,
   video: mdiVideoPlus,
   table: mdiTable,
   blockquote: mdiFormatQuoteOpen,

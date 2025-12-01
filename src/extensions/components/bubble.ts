@@ -21,6 +21,7 @@ type BubbleImageType =
   | `video-${BubbleImageOrVideoSizeType}`
   | 'image'
   | 'image-aspect-ratio'
+  | 'image-caption'
   | 'unlink'
   | 'link-open'
   | 'remove'
@@ -113,6 +114,42 @@ const imageSizeMenus = (editor: Editor): BubbleMenuItem[] => {
     }
   }))
 }
+
+export const imageMenus = (editor: Editor): BubbleMenuItem[] => [
+  ...imageFloatMenus(editor),
+  ...imageSizeMenus(editor),
+  {
+    type: 'image-aspect-ratio',
+    component: ActionButton,
+    componentProps: {
+      tooltip: 'editor.image.dialog.form.aspectRatio',
+      icon: 'aspectRatio',
+      action: () => {
+        const isLock = editor.isActive('image', { lockAspectRatio: true })
+        editor.chain().focus().updateImage({
+          lockAspectRatio: !isLock,
+          height: isLock ? undefined : null
+        }).run()
+      },
+      isActive: () => editor.isActive('image', { lockAspectRatio: true })
+    }
+  },
+  {
+    type: 'image-caption',
+    component: ActionButton,
+    componentProps: {
+      tooltip: 'editor.image.dialog.form.caption',
+      icon: 'imageLabel',
+      action: () => {
+        const isDisabled = editor.isActive('image', { captionDisabled: true })
+        editor.chain().focus().updateImage({
+          captionDisabled: !isDisabled
+        }).run()
+      },
+      isActive: () => !editor.isActive('image', { captionDisabled: true })
+    }
+  }
+]
 
 const videoSizeMenus = (editor: Editor): BubbleMenuItem[] => {
   const types: BubbleImageOrVideoSizeType[] = ['size-small', 'size-medium', 'size-large']
@@ -216,26 +253,9 @@ const tableBubbleMenus = (editor: Editor): BubbleMenuItem[] => {
 }
 
 export const defaultBubbleList = (editor: Editor): BubbleMenuItem[] => [
-  ...imageFloatMenus(editor),
-  ...imageSizeMenus(editor),
+  ...imageMenus(editor),
   ...videoSizeMenus(editor),
   ...tableBubbleMenus(editor),
-  {
-    type: 'image-aspect-ratio',
-    component: ActionButton,
-    componentProps: {
-      tooltip: 'editor.image.dialog.form.aspectRatio',
-      icon: 'aspectRatio',
-      action: () => {
-        const isLock = editor.isActive('image', { lockAspectRatio: true })
-        editor.chain().focus().updateImage({
-          lockAspectRatio: !isLock,
-          height: isLock ? undefined : null
-        }).run()
-      },
-      isActive: () => editor.isActive('image', { lockAspectRatio: true })
-    }
-  },
   {
     type: 'unlink',
     component: ActionButton,

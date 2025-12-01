@@ -53,6 +53,8 @@ const locale: Record<string, string> = {
   'editor.image.dialog.form.alt': 'Texte alternatif',
   'editor.image.dialog.form.aspectRatio': 'Conserver les proportions',
   'editor.image.dialog.form.file': 'Fichier',
+  'editor.image.dialog.form.caption': 'Étiquette',
+  'editor.image.dialog.form.captionDisabled': 'Libellé désactivé',
   'editor.image.dialog.button.apply': 'appliquer',
   'editor.video.tooltip': 'Vidéo',
   'editor.video.dialog.title': 'Insérer une vidéo',

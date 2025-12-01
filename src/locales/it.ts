@@ -53,6 +53,8 @@ const locale: Record<string, string> = {
   "editor.image.dialog.form.alt": "Alt",
   "editor.image.dialog.form.aspectRatio": "Blocca le proporzioni originali",
   "editor.image.dialog.form.file": "File",
+  'editor.image.dialog.form.caption': 'Etichetta',
+  'editor.image.dialog.form.captionDisabled': 'Etichetta disabilitata',
   "editor.image.dialog.button.apply": "Applica",
   "editor.video.tooltip": "Video",
   "editor.video.dialog.title": "Inserisci video",

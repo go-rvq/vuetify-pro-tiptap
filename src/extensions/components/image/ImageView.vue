@@ -1,5 +1,8 @@
+<script lang="ts">
+import { NodeViewContent, nodeViewProps, NodeViewWrapper  } from '@tiptap/vue-3'
+</script>
+
 <script setup lang="ts">
-import { nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
 import { computed, ref, unref, watchEffect } from 'vue'
 
 import { IMAGE_MAX_SIZE, IMAGE_MIN_SIZE, IMAGE_THROTTLE_WAIT_TIME } from '@/constants/define'
@@ -16,6 +19,8 @@ const props = defineProps({
   }
 })
 
+const editor = props.editor
+
 const ResizeDirection = {
   TOP_LEFT: 'tl',
   TOP_RIGHT: 'tr',
@@ -24,8 +29,8 @@ const ResizeDirection = {
 }
 
 const maxSize = ref<{
-    width: number
-    height: number
+  width: number
+  height: number
 }>({
   width: IMAGE_MAX_SIZE,
   height: IMAGE_MAX_SIZE
@@ -78,6 +83,8 @@ const imageViewClass = computed<string[]>(() => {
 
   return ['image-view']
 })
+
+const imgWidth = ref<string | undefined>(undefined)
 const imageMaxStyle = computed(() => {
   const {
     style: { width }
@@ -85,6 +92,8 @@ const imageMaxStyle = computed(() => {
 
   return { width: width === '100%' ? width : undefined }
 })
+
+const captionDisabled = computed<ImageAttrsOptions['captionDisabled']>(() => props.node.attrs.captionDisabled || false)
 
 function onImageLoad(e: Record<string, any>) {
   originalSize.value = {
@@ -99,6 +108,8 @@ function selectImage() {
   const pos = getPos()
   pos && editor.commands.setNodeSelection(pos)
 }
+
+const imgEl = ref<HTMLImageElement | null>(null)
 
 /* invoked when window or editor resize */
 const getMaxSize = throttle(function () {
@@ -160,7 +171,6 @@ const onMouseMove = throttle(function (e: MouseEvent) {
 
   const width = clamp(w + dx, IMAGE_MIN_SIZE, unref(maxSize).width)
   const height = unref(lockAspectRatio) ? null : Math.max(h + dy, IMAGE_MIN_SIZE)
-
   props.updateAttributes({
     width,
     height
@@ -196,13 +206,23 @@ function offEvents() {
   document?.removeEventListener('mouseup', onMouseUp, true)
 }
 
+/* invoked when img tag resize */
+const imageSizeChange = throttle(function () {
+  imgWidth.value = `${imgEl.value?.offsetWidth as number}px`
+}, IMAGE_THROTTLE_WAIT_TIME)
+
 const resizeOb: ResizeObserver = new ResizeObserver(() => getMaxSize())
+const imgResizeOb: ResizeObserver = new ResizeObserver(() => imageSizeChange())
 
 watchEffect(effect => {
   unref(resizeOb).observe(props.editor.view.dom)
+  if (imgEl.value) {
+    unref(imgResizeOb).observe(imgEl.value)
+  }
 
   effect(() => {
     unref(resizeOb).disconnect()
+    unref(imgResizeOb).disconnect()
   })
 })
 </script>
@@ -220,6 +240,7 @@ watchEffect(effect => {
       :style="imageMaxStyle"
     >
       <img
+        ref="imgEl"
         :src="imgAttrs.src"
         :alt="imgAttrs.alt"
         :style="imgAttrs.style"
@@ -238,5 +259,10 @@ watchEffect(effect => {
         ></span>
       </div>
     </div>
+    <template v-if="!captionDisabled">
+      <div class="caption" :style="{ width: imgWidth }">
+        <NodeViewContent />
+      </div>
+    </template>
   </NodeViewWrapper>
 </template>

@@ -37,6 +37,7 @@ function onAction() {
   if (attrs?.width) model.value.width = attrs.width
   if (attrs?.height) model.value.height = attrs.height
   if (attrs?.display) model.value.display = attrs.display
+  if (attrs?.captionDisabled) model.value.captionDisabled = attrs.captionDisabled
   model.value.lockAspectRatio = attrs.lockAspectRatio ?? true
 }
 </script>

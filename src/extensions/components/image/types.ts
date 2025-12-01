@@ -38,6 +38,8 @@ export interface ImageAttrsOptions {
   height?: number | string | null
   /** The display style of the image. */
   display?: Display
+  /** If caption of image is disabled. */
+  captionDisabled?: boolean
 }
 
 /** Represents a form for handling image attributes */

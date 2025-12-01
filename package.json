@@ -45,6 +45,7 @@
     "LICENSE",
     "README.md",
     "lib",
+    "src",
     "package.json"
   ],
   "engines": {
@@ -61,7 +62,7 @@
     "commit": "czg",
     "check:types": "vue-tsc --noEmit --skipLibCheck",
     "push": "pnpm build:lib && pnpm publish --no-git-checks --registry https://registry.npmjs.org/",
-    "prepare": "husky"
+    "prepare": "scripts/prepare.sh"
   },
   "peerDependencies": {
     "vue": "^3.5.0",
