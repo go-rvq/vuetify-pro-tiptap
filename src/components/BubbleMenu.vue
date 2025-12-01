@@ -1,17 +1,26 @@
 <script setup lang="ts">
-import type { NodeSelection } from '@tiptap/pm/state'
 import type { Editor, Extension } from '@tiptap/vue-3'
 import type { BaseKitOptions } from '@/extensions/base-kit'
 import type { BubbleMenuItem, BubbleTypeMenu, NodeTypeKey } from '@/extensions/components/bubble'
-
-import { TextSelection } from '@tiptap/pm/state'
+import { Editor as TipTapEditor } from '@tiptap/core'
+import { EditorState, NodeSelection, TextSelection } from '@tiptap/pm/state'
+import { EditorView } from '@tiptap/pm/view'
 import { BubbleMenu } from '@tiptap/vue-3/menus'
-import { computed, ref, unref } from 'vue'
+import { computed, unref } from 'vue'
 import { useLocale } from '@/locales'
 import { isExtEnableAndActive } from '@/utils/utils'
 
-interface Props {
+export interface Props {
   editor: Editor
+  shouldShow?: ((props: {
+    editor: TipTapEditor
+    element: HTMLElement
+    view: EditorView
+    state: EditorState
+    oldState?: EditorState
+    from: number
+    to: number
+  }) => boolean)
 }
 
 const props = withDefaults(defineProps<Props>(), {})
@@ -69,7 +78,7 @@ function getMenus(nodeKey?: NodeTypeKey): BubbleMenuItem[] {
 </script>
 
 <template>
-  <BubbleMenu :editor="editor">
+  <BubbleMenu :editor="editor" :should-show="props.shouldShow">
     <VCard class="vuetify-pro-tiptap-editor__menu-bubble">
       <VCardText class="d-flex pa-0">
         <VToolbar density="compact" flat height="auto" class="py-1 ps-1">

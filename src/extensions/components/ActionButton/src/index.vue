@@ -11,18 +11,19 @@ const disableToolbar = inject<Readonly<Ref<boolean>>>('disableToolbar', ref(fals
 
 <template>
   <VBtn
-    class="rounded me-1 ms-0"
     density="comfortable"
     size="small"
     :disabled="disableToolbar || disabled"
     :color="color"
     icon
-    :class="{
-      'v-btn--active': isActive?.()
-    }"
+    class="rounded me-1 ms-0" :class="[
+      props.class,
+      {
+        'v-btn--active': isActive?.()
+      }]"
     @click="action"
   >
-    <VIcon :icon="getIcon(props.icon)" />
+    <VIcon :icon="props.rawIcon || getIcon(props.icon)" />
 
     <VTooltip :eager="false" activator="parent" location="top" :text="props.tooltip" />
 

@@ -11,7 +11,7 @@ import { useMarkdownTheme, useProvideTiptapStore } from '@/hooks'
 import { useLocale } from '@/locales'
 import { VuetifyTiptapOnChange } from '@/type'
 import { differenceBy, getCssUnitWithDefault, hasExtension, isBoolean, isEqual, throttle } from '@/utils/utils'
-import BubbleMenu from './BubbleMenu.vue'
+import BubbleMenu, { Props as BubbleMenuProps } from './BubbleMenu.vue'
 import TipTapToolbar from './TiptapToolbar.vue'
 
 type HandleKeyDown = NonNullable<EditorOptions['editorProps']['handleKeyDown']>
@@ -30,6 +30,7 @@ interface Props {
   hideToolbar?: boolean
   disableToolbar?: boolean
   hideBubble?: boolean
+  bubbleShouldShow?: BubbleMenuProps['shouldShow']
   removeDefaultWrapper?: boolean
   maxWidth?: string | number
   minHeight?: string | number
@@ -228,7 +229,7 @@ defineExpose({ editor })
           />
 
           <!-- Edit Mode -->
-          <BubbleMenu v-if="!hideBubble" :editor="editor" />
+          <BubbleMenu v-if="!hideBubble" :editor="editor" :should-show="bubbleShouldShow" />
 
           <slot
             name="editor"
