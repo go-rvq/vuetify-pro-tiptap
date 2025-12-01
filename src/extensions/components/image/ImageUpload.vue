@@ -5,6 +5,7 @@ import { computed, ref, unref } from 'vue'
 
 import { getIcon } from '@/constants/icons'
 import Logger from '@/utils/logger'
+import ImageProperties from './ImageProperties.vue'
 
 interface Props {
   modelValue?: ImageForm
@@ -74,8 +75,6 @@ const onFileSelected = async (files: File | File[]) => {
       :prepend-icon="getIcon('linkVariant')"
     />
 
-    <VTextField v-model="form.alt" :label="t('editor.image.dialog.form.alt')" :prepend-icon="getIcon('text')" />
-
-    <VCheckbox v-model="form.lockAspectRatio" :label="t('editor.image.dialog.form.aspectRatio')" />
+    <ImageProperties v-model="form as ImageForm" :t="t" />
   </VForm>
 </template>

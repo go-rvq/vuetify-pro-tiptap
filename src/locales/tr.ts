@@ -53,6 +53,8 @@ const locale: Record<string, string> = {
   'editor.image.dialog.form.alt': 'Alternatif Metin',
   'editor.image.dialog.form.aspectRatio': 'Orijinal En/Boy Oranını Koru',
   'editor.image.dialog.form.file': 'Dosya',
+  'editor.image.dialog.form.label': 'Label',
+  'editor.image.dialog.form.labelDisabled': '',
   'editor.image.dialog.button.apply': 'Uygula',
   'editor.video.tooltip': 'Video',
   'editor.video.dialog.title': 'Video Ekle',

@@ -4,6 +4,7 @@ import type { ImageForm } from './types'
 import { computed } from 'vue'
 
 import { getIcon } from '@/constants/icons'
+import ImageProperties from './ImageProperties.vue'
 
 interface Props {
   modelValue?: ImageForm
@@ -35,8 +36,6 @@ const form = computed({
       :prepend-icon="getIcon('linkVariant')"
     />
 
-    <VTextField v-model="form.alt" :label="t('editor.image.dialog.form.alt')" :prepend-icon="getIcon('text')" />
-
-    <VCheckbox v-model="form.lockAspectRatio" :label="t('editor.image.dialog.form.aspectRatio')" />
+    <ImageProperties v-model="form as ImageForm" :t="t" />
   </VForm>
 </template>

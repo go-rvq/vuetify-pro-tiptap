@@ -53,6 +53,8 @@ const locale: Record<string, string> = {
   'editor.image.dialog.form.alt': 'Alt',
   'editor.image.dialog.form.aspectRatio': 'Originele aspect ratio vastzetten',
   'editor.image.dialog.form.file': 'Bestand',
+  'editor.image.dialog.form.label': 'Label',
+  'editor.image.dialog.form.labelDisabled': 'Label uitgeschakeld',
   'editor.image.dialog.button.apply': 'Toepassen',
   'editor.video.tooltip': 'Video',
   'editor.video.dialog.title': 'Video invoegen',

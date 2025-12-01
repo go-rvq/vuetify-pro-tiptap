@@ -1,14 +1,16 @@
 import type { ImageOptions as TiptapImageOptions } from '@tiptap/extension-image'
 import type { Display, ImageAttrsOptions, ImageTab, ImageTabKey } from './components/image/types'
-import type { GeneralOptions } from '@/type'
+import type { DisabledCheckOptions, GeneralOptions } from '@/type'
 
 import { Image as TiptapImage } from '@tiptap/extension-image'
-import { VueNodeViewRenderer } from '@tiptap/vue-3'
+import { mergeAttributes, VueNodeViewRenderer } from '@tiptap/vue-3'
 import { IMAGE_SIZE } from '@/constants/define'
 import { ImageActionButton } from './components/ActionButton'
 
 import ImageDialog from './components/image/ImageDialog.vue'
 import ImageView from './components/image/ImageView.vue'
+
+export { default as ImageProperties } from './components/image/ImageProperties.vue'
 
 /**
  * Represents the type for the upload function, which takes a File parameter and returns a Promise of type string.
@@ -18,7 +20,7 @@ type Upload = (file: File) => Promise<string>
 /**
  * Represents the interface for image options, extending TiptapImageOptions and GeneralOptions.
  */
-export interface ImageOptions extends TiptapImageOptions, GeneralOptions<ImageOptions> {
+export interface ImageOptions extends TiptapImageOptions, GeneralOptions<ImageOptions>, DisabledCheckOptions {
   /** Function for uploading images */
   upload?: Upload
   /** image default width */
@@ -31,6 +33,10 @@ export interface ImageOptions extends TiptapImageOptions, GeneralOptions<ImageOp
   hiddenTabs: ImageTabKey[]
   /** Component for the image dialog */
   dialogComponent: any
+  /** Label for image */
+  label?: string
+  /** If label of image is disabled. */
+  labelDisabled?: boolean
 }
 
 /**
@@ -57,6 +63,34 @@ declare module '@tiptap/core' {
 }
 
 export const Image = /* @__PURE__*/ TiptapImage.extend<ImageOptions>({
+  parseHTML() {
+    const imgSelector = this.options.allowBase64 ? 'img[src]' : 'img[src]:not([src^="data:"])'
+    return [
+      {
+        tag: imgSelector,
+        getAttrs(node) {
+          if (node.parentElement?.tagName === 'FIGURE') {
+            const figure = node.parentElement as HTMLElement
+            const captionElement = figure.querySelector('FIGCAPTION')
+            if (captionElement) {
+              node.setAttribute('data-label', ((captionElement as HTMLElement).textContent || '') as string)
+              figure.removeChild(captionElement)
+            }
+          }
+          return null
+        }
+      }
+    ]
+  },
+
+  renderHTML({ HTMLAttributes, node }) {
+    const attrs = mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)
+    if (node.attrs.labelDisabled || !node.attrs.label) {
+      return ['img', attrs]
+    }
+    return ['figure', {}, ['img', attrs], ['figcaption', {}, node.attrs.label]]
+  },
+
   addAttributes() {
     return {
       ...this.parent?.(),
@@ -90,6 +124,28 @@ export const Image = /* @__PURE__*/ TiptapImage.extend<ImageOptions>({
           const display = element.getAttribute('data-display')
           return display || 'inline'
         }
+      },
+      label: {
+        default: this.options.label,
+        renderHTML: () => {
+          // if has label render as FIGCAPTION
+          return {}
+        },
+        parseHTML: element => element.getAttribute('data-label') || ''
+      },
+      labelDisabled: {
+        default: this.options.labelDisabled,
+        renderHTML: ({ labelDisabled }) => {
+          if (!labelDisabled) {
+            return {}
+          }
+
+          return {
+            'data-label-disabled': labelDisabled
+          }
+        },
+        parseHTML: element =>
+          element.getAttribute('data-label-disabled') === 'true' || false
       }
     }
   },
@@ -122,6 +178,7 @@ export const Image = /* @__PURE__*/ TiptapImage.extend<ImageOptions>({
         return {
           component: ImageActionButton,
           componentProps: {
+            isDisabled: extension.options.isDisabled,
             editor,
             t,
             upload,

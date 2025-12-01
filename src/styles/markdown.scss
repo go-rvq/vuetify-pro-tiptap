@@ -400,7 +400,7 @@ $d-selection-pre-code-bg-color: rgb(160 200 255 / 25%);
     color: var(--cyanosis-strong-color);
   }
 
-  i,
+  i:not(.v-icon),
   em {
     color: var(--cyanosis-em-color);
   }

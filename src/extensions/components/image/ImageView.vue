@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
-import { computed, ref, unref, watchEffect } from 'vue'
+import { computed, ref, unref, useTemplateRef, watchEffect } from 'vue'
 
 import { IMAGE_MAX_SIZE, IMAGE_MIN_SIZE, IMAGE_THROTTLE_WAIT_TIME } from '@/constants/define'
 
@@ -24,8 +24,8 @@ const ResizeDirection = {
 }
 
 const maxSize = ref<{
-    width: number
-    height: number
+  width: number
+  height: number
 }>({
   width: IMAGE_MAX_SIZE,
   height: IMAGE_MAX_SIZE
@@ -84,6 +84,19 @@ const imageMaxStyle = computed(() => {
   } = unref(imgAttrs)
 
   return { width: width === '100%' ? width : undefined }
+})
+
+const labelDisabled = computed<ImageAttrsOptions['labelDisabled']>(() => props.node.attrs.labelDisabled || false)
+
+const label = computed<ImageAttrsOptions['label']>({
+  get() {
+    return props.node.attrs.label ?? ''
+  },
+  set(label: string | undefined) {
+    props.updateAttributes({
+      label
+    })
+  }
 })
 
 function onImageLoad(e: Record<string, any>) {
@@ -186,6 +199,20 @@ function onMouseUp(e: MouseEvent) {
   selectImage()
 }
 
+const labelEl = useTemplateRef<HTMLElement>('labelEl')
+
+let labelChangeTimer: number = 0
+
+function onLabelChange() {
+  if (labelChangeTimer) {
+    clearInterval(labelChangeTimer)
+  }
+
+  labelChangeTimer = setTimeout(() => {
+    label.value = (labelEl.value?.textContent || '') as string
+  }, 1000)
+}
+
 function onEvents() {
   document?.addEventListener('mousemove', onMouseMove, true)
   document?.addEventListener('mouseup', onMouseUp, true)
@@ -237,6 +264,9 @@ watchEffect(effect => {
           @mousedown="onMouseDown($event, direction)"
         ></span>
       </div>
+    </div>
+    <div v-if="!labelDisabled" ref="labelEl" class="caption" contenteditable="true" @input="onLabelChange">
+      {{ label }}
     </div>
   </NodeViewWrapper>
 </template>

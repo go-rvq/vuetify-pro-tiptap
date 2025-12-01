@@ -124,6 +124,7 @@ export const NODE_TYPE_MENU: NodeTypeMenu = {
     'divider',
     'image',
     'image-aspect-ratio',
+    'image-label',
     'remove'
   ],
   text: ['bold', 'italic', 'underline', 'strike', 'divider', 'color', 'highlight', 'textAlign', 'divider', 'link'],
