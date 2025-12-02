@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import type { VuetifyTiptapOnChange } from 'vuetify-pro-tiptap'
 import JsonEditorVue from 'json-editor-vue'
-import { computed, ref, unref } from 'vue'
+import { ref, unref } from 'vue'
 import { useTheme } from 'vuetify'
 import { BaseKit, Heading, locale  } from 'vuetify-pro-tiptap'
 
@@ -30,7 +30,7 @@ const extensions = [
 const theme = useTheme()
 
 const VuetifyTiptapRef = ref<null | Record<string, any>>(null)
-const output = ref<'html' | 'json' | 'text'>('html')
+const output = ref<'html' | 'json' | 'text'>('json')
 const content = ref(jsonValue)
 const markdownTheme = ref('')
 const outlined = ref(true)
@@ -40,6 +40,7 @@ const hideToolbar = ref(false)
 const disableToolbar = ref(false)
 const errorMessages = ref(null)
 const maxWidth = ref<number>(900)
+const jsonContent = ref(jsonValue)
 
 const customLang = ref({ ...locale.message.en })
 
@@ -57,6 +58,8 @@ function setCustom() {
 }
 
 function onChangeEditor({ editor, output }: VuetifyTiptapOnChange) {
+  const jsonValue = editor.getJSON()
+  jsonContent.value = jsonValue as any
   console.log('output :>> ', output)
   console.log('output[html] :>> ', editor.getHTML())
   console.log('output[json] :>> ', editor.getJSON())
@@ -171,7 +174,7 @@ function getText() {
 
       <VDivider class="my-4" />
 
-      <JsonEditorVue v-model="content" read-only height="400px" />
+      <JsonEditorVue v-model="jsonContent" read-only height="400px" />
       <!-- <VTextarea :value="content" readonly auto-grow /> -->
 
       <VDivider class="my-4" />

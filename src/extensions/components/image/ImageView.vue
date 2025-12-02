@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
-import { computed, ref, unref, useTemplateRef, watchEffect } from 'vue'
+import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
+import { computed, ref, unref, watchEffect } from 'vue'
 
 import { IMAGE_MAX_SIZE, IMAGE_MIN_SIZE, IMAGE_THROTTLE_WAIT_TIME } from '@/constants/define'
 
@@ -15,6 +15,8 @@ const props = defineProps({
     required: true
   }
 })
+
+const editor = props.editor
 
 const ResizeDirection = {
   TOP_LEFT: 'tl',
@@ -78,6 +80,8 @@ const imageViewClass = computed<string[]>(() => {
 
   return ['image-view']
 })
+
+const imgWidth = ref<string | undefined>(undefined)
 const imageMaxStyle = computed(() => {
   const {
     style: { width }
@@ -88,22 +92,12 @@ const imageMaxStyle = computed(() => {
 
 const labelDisabled = computed<ImageAttrsOptions['labelDisabled']>(() => props.node.attrs.labelDisabled || false)
 
-const label = computed<ImageAttrsOptions['label']>({
-  get() {
-    return props.node.attrs.label ?? ''
-  },
-  set(label: string | undefined) {
-    props.updateAttributes({
-      label
-    })
-  }
-})
-
 function onImageLoad(e: Record<string, any>) {
   originalSize.value = {
     width: e.target.width,
     height: e.target.height
   }
+  imgWidth.value = `${e.target.width}px`
 }
 
 // https://github.com/scrumpy/tiptap/issues/361#issuecomment-540299541
@@ -112,6 +106,8 @@ function selectImage() {
   const pos = getPos()
   pos && editor.commands.setNodeSelection(pos)
 }
+
+const imgEl = ref<HTMLImageElement | null>(null)
 
 /* invoked when window or editor resize */
 const getMaxSize = throttle(function () {
@@ -173,7 +169,7 @@ const onMouseMove = throttle(function (e: MouseEvent) {
 
   const width = clamp(w + dx, IMAGE_MIN_SIZE, unref(maxSize).width)
   const height = unref(lockAspectRatio) ? null : Math.max(h + dy, IMAGE_MIN_SIZE)
-
+  imgWidth.value = `${width}px`
   props.updateAttributes({
     width,
     height
@@ -197,20 +193,6 @@ function onMouseUp(e: MouseEvent) {
 
   offEvents()
   selectImage()
-}
-
-const labelEl = useTemplateRef<HTMLElement>('labelEl')
-
-let labelChangeTimer: number = 0
-
-function onLabelChange() {
-  if (labelChangeTimer) {
-    clearInterval(labelChangeTimer)
-  }
-
-  labelChangeTimer = setTimeout(() => {
-    label.value = (labelEl.value?.textContent || '') as string
-  }, 1000)
 }
 
 function onEvents() {
@@ -247,6 +229,7 @@ watchEffect(effect => {
       :style="imageMaxStyle"
     >
       <img
+        ref="imgEl"
         :src="imgAttrs.src"
         :alt="imgAttrs.alt"
         :style="imgAttrs.style"
@@ -265,8 +248,9 @@ watchEffect(effect => {
         ></span>
       </div>
     </div>
-    <div v-if="!labelDisabled" ref="labelEl" class="caption" contenteditable="true" @input="onLabelChange">
-      {{ label }}
-    </div>
+    <template v-if="!labelDisabled">
+      <NodeViewContent v-if="editor.view.editable" class="caption" :style="{ width: imgWidth }" />
+      <div v-else-if="props.node.attrs.label" class="caption">{{ props.node.attrs.label ?? '' }}</div>
+    </template>
   </NodeViewWrapper>
 </template>

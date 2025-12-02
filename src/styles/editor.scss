@@ -75,9 +75,22 @@ $primary-color: rgb(var(--v-theme-primary, 24, 103, 192));
         }
       }
 
+      .image-container {
+        .image-container_wrapper {
+          display: flex;
+          flex-direction: column;
+
+          .image-container_legend {
+            text-align: center;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+          }
+        }
+      }
+
       .image-view > .caption {
-        padding: 10px;
         font-style: italic;
+        line-height: normal;
         text-align: center;
         background-color: #f5f5f5;
         border: 1px solid #ccc;

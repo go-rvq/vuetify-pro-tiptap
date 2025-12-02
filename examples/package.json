@@ -2,7 +2,7 @@
   "name": "examples",
   "version": "0.0.0",
   "dependencies": {
-    "json-editor-vue": "^0.10.16",
+    "json-editor-vue": "^0.18.1",
     "vanilla-jsoneditor": "^0.18.3",
     "vuetify-pro-tiptap": "workspace:*"
   }

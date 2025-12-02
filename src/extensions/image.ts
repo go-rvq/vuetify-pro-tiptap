@@ -33,10 +33,10 @@ export interface ImageOptions extends TiptapImageOptions, GeneralOptions<ImageOp
   hiddenTabs: ImageTabKey[]
   /** Component for the image dialog */
   dialogComponent: any
-  /** Label for image */
-  label?: string
-  /** If label of image is disabled. */
+  /** If label of image is disabled */
   labelDisabled?: boolean
+  /** Customize label node content. Default is 'text*' */
+  labelContent?: string
 }
 
 /**
@@ -69,11 +69,24 @@ export const Image = /* @__PURE__*/ TiptapImage.extend<ImageOptions>({
       {
         tag: imgSelector,
         getAttrs(node) {
-          if (node.parentElement?.tagName === 'FIGURE') {
+          if (node.parentElement?.classList.contains('image-container_wrapper')) {
             const figure = node.parentElement as HTMLElement
-            const captionElement = figure.querySelector('FIGCAPTION')
+
+            let dataDisplay = figure.getAttribute('data-display')
+
+            if (!dataDisplay) {
+              if (figure.parentElement?.classList.contains('image-container')) {
+                dataDisplay = figure.parentElement?.getAttribute('data-display')
+              }
+            }
+
+            if (dataDisplay) {
+              node.setAttribute('data-display', dataDisplay)
+            }
+
+            const captionElement = figure.querySelector('.image-container_legend')
             if (captionElement) {
-              node.setAttribute('data-label', ((captionElement as HTMLElement).textContent || '') as string)
+              node.innerHTML = captionElement.innerHTML
               figure.removeChild(captionElement)
             }
           }
@@ -85,10 +98,22 @@ export const Image = /* @__PURE__*/ TiptapImage.extend<ImageOptions>({
 
   renderHTML({ HTMLAttributes, node }) {
     const attrs = mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)
-    if (node.attrs.labelDisabled || !node.attrs.label) {
+    if (node.attrs.labelDisabled || !node.content.size) {
       return ['img', attrs]
     }
-    return ['figure', {}, ['img', attrs], ['figcaption', {}, node.attrs.label]]
+
+    const container: any = { class: 'image-container' }
+
+    if (attrs['data-display']) {
+      container['data-display'] = attrs['data-display']
+      delete attrs['data-display']
+    }
+
+    return ['span', container, ['span', { class: 'image-container_wrapper' }, ['img', attrs], ['span', { class: 'image-container_legend' }, 0]]]
+  },
+
+  content() {
+    return this.options.labelContent || 'text*'
   },
 
   addAttributes() {
@@ -124,14 +149,6 @@ export const Image = /* @__PURE__*/ TiptapImage.extend<ImageOptions>({
           const display = element.getAttribute('data-display')
           return display || 'inline'
         }
-      },
-      label: {
-        default: this.options.label,
-        renderHTML: () => {
-          // if has label render as FIGCAPTION
-          return {}
-        },
-        parseHTML: element => element.getAttribute('data-label') || ''
       },
       labelDisabled: {
         default: this.options.labelDisabled,
