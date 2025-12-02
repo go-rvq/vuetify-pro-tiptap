@@ -1,3 +1,4 @@
+export { default as BlockTypeSelectorActionMenuButton } from './exts/BlockTypeSelectorActionMenuButton.vue'
 export { default as FontFamilyActionMenuButton } from './exts/FontFamilyActionMenuButton.vue'
 export { default as FontSizeActionMenuButton } from './exts/FontSizeActionMenuButton.vue'
 export { default as HeadingActionMenuButton } from './exts/HeadingActionMenuButton.vue'

@@ -109,3 +109,19 @@ export interface ButtonViewParams<T = any> {
 export interface ButtonView<T = any> {
   (options: ButtonViewParams<T>): ButtonViewReturn | ButtonViewReturn[]
 }
+
+/**
+ * Represents the disabled check options for Tiptap extensions.
+ */
+export interface DisabledCheckOptions {
+  /** isDisabled disabled check handler */
+  isDisabled?: (editor: Editor) => boolean
+}
+
+/**
+ * Represents the menu item builder params
+ */
+export interface MenuItemBuilderParams extends DisabledCheckOptions {
+  editor: Editor
+  t: (path: string) => string
+}

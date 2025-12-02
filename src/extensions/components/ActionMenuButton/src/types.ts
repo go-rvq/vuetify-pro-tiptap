@@ -6,6 +6,7 @@ import type { ButtonViewReturnComponentProps } from '@/type'
 export interface ActionMenuButtonItem {
   title: string
   icon?: keyof IconsOptions
+  rawIcon?: string
   isActive: NonNullable<ButtonViewReturnComponentProps['isActive']>
   action?: ButtonViewReturnComponentProps['action']
   style?: StyleValue
