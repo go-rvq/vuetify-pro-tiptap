@@ -1,5 +1,8 @@
+<script lang="ts">
+import { NodeViewContent, nodeViewProps, NodeViewWrapper  } from '@tiptap/vue-3'
+</script>
+
 <script setup lang="ts">
-import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
 import { computed, ref, unref, watchEffect } from 'vue'
 
 import { IMAGE_MAX_SIZE, IMAGE_MIN_SIZE, IMAGE_THROTTLE_WAIT_TIME } from '@/constants/define'
@@ -97,7 +100,6 @@ function onImageLoad(e: Record<string, any>) {
     width: e.target.width,
     height: e.target.height
   }
-  imgWidth.value = `${e.target.width}px`
 }
 
 // https://github.com/scrumpy/tiptap/issues/361#issuecomment-540299541
@@ -169,7 +171,6 @@ const onMouseMove = throttle(function (e: MouseEvent) {
 
   const width = clamp(w + dx, IMAGE_MIN_SIZE, unref(maxSize).width)
   const height = unref(lockAspectRatio) ? null : Math.max(h + dy, IMAGE_MIN_SIZE)
-  imgWidth.value = `${width}px`
   props.updateAttributes({
     width,
     height
@@ -205,13 +206,23 @@ function offEvents() {
   document?.removeEventListener('mouseup', onMouseUp, true)
 }
 
+/* invoked when img tag resize */
+const imageSizeChange = throttle(function () {
+  imgWidth.value = `${imgEl.value?.offsetWidth as number}px`
+}, IMAGE_THROTTLE_WAIT_TIME)
+
 const resizeOb: ResizeObserver = new ResizeObserver(() => getMaxSize())
+const imgResizeOb: ResizeObserver = new ResizeObserver(() => imageSizeChange())
 
 watchEffect(effect => {
   unref(resizeOb).observe(props.editor.view.dom)
+  if (imgEl.value) {
+    unref(imgResizeOb).observe(imgEl.value)
+  }
 
   effect(() => {
     unref(resizeOb).disconnect()
+    unref(imgResizeOb).disconnect()
   })
 })
 </script>
@@ -249,8 +260,12 @@ watchEffect(effect => {
       </div>
     </div>
     <template v-if="!labelDisabled">
-      <NodeViewContent v-if="editor.view.editable" class="caption" :style="{ width: imgWidth }" />
-      <div v-else-if="props.node.attrs.label" class="caption">{{ props.node.attrs.label ?? '' }}</div>
+      <div class="caption" :style="{ width: imgWidth }">
+        <template v-if="editor.view.editable">
+          <NodeViewContent />
+        </template>
+        <template v-else-if="props.node.attrs.label">{{ props.node.attrs.label ?? '' }}</template>
+      </div>
     </template>
   </NodeViewWrapper>
 </template>

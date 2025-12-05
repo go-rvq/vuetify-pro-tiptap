@@ -97,8 +97,7 @@
     "@tiptap/extensions": "^3.4.4",
     "@tiptap/html": "^3.4.4",
     "@tiptap/pm": "^3.4.4",
-    "@tiptap/vue-3": "^3.4.4",
-    "@vueuse/components": "^14.1.0"
+    "@tiptap/vue-3": "^3.4.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.4.1",
@@ -106,7 +105,6 @@
     "@types/lodash": "^4.17.20",
     "@types/lodash-es": "^4.17.12",
     "@vitejs/plugin-vue": "^5.2.4",
-    "@vueuse/core": "^13.9.0",
     "@yikoyu/commitlint-config": "^0.2.3",
     "@yikoyu/semantic-release-config": "^0.1.5",
     "@yikoyu/stylelint-config": "^0.1.4",

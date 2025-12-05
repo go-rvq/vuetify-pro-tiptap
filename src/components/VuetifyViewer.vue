@@ -2,8 +2,7 @@
 import type { AnyExtension, JSONContent } from '@tiptap/core'
 import type { IWhiteList } from 'xss'
 import { generateHTML } from '@tiptap/html'
-import { vElementSize } from '@vueuse/components'
-import { computed, onMounted, ref, unref, useTemplateRef } from 'vue'
+import { computed, ref, unref, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
 
 import Xss from 'xss'
@@ -81,13 +80,25 @@ function onResize() {
     }
   })
 }
+
+const resizeOb: ResizeObserver = new ResizeObserver(() => onResize())
+
+watchEffect(effect => {
+  if (contentEl.value) {
+    unref(resizeOb).observe(contentEl.value)
+  }
+
+  effect(() => {
+    unref(resizeOb).disconnect()
+  })
+})
 </script>
 
 <template>
   <div class="vuetify-pro-tiptap-editor__content" :class="viewerClass" :style="{ width: '100%' }">
     <slot name="before"></slot>
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <div ref="contentEl" v-element-size="onResize" class="content" v-html="cleanValue"></div>
+    <div ref="contentEl" class="content" v-html="cleanValue"></div>
     <slot name="after"></slot>
   </div>
 </template>
