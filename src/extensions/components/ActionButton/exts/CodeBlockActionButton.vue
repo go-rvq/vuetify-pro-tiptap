@@ -1,19 +1,15 @@
 <script lang="ts" setup>
+import { CodeBlockMenuItem } from '@/extensions/components/MenuItem'
 import ActionButton from '../src/index.vue'
 import { extActionButtonProps } from '../src/props'
 
-defineProps(extActionButtonProps)
+const props = defineProps(extActionButtonProps)
+const item = CodeBlockMenuItem(props)
 </script>
 
 <template>
   <ActionButton
-    :editor="editor"
-    :action="() => editor.chain().focus().toggleCodeBlock().run()"
-    :is-active="() => editor.isActive('codeBlock') || false"
-    :disabled="!editor.can().toggleCodeBlock()"
-    :tooltip="t('editor.codeblock.tooltip')"
-    icon="codeBlock"
+    :editor="props.editor"
+    v-bind="{ ...item, tootip: item.title }"
   />
 </template>
-
-<!-- <style lang="scss" scoped></style> -->

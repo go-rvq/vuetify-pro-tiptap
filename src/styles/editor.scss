@@ -39,6 +39,19 @@ $primary-color: rgb(var(--v-theme-primary, 24, 103, 192));
         .v-divider--vertical {
           height: inherit;
         }
+
+
+        .blocktype-selector {
+          display: flex;
+
+          .active-title {
+            height: inherit;
+            margin-left: -4px;
+            font-size: 90%;
+            cursor: pointer;
+            background-color: white;
+          }
+        }
       }
     }
 

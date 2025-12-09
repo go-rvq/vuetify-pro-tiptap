@@ -1,8 +1,10 @@
 import type { Extension } from "@tiptap/core"
 
+import type { Level } from '@tiptap/extension-heading'
 import type { PropType } from "vue"
-import { actionButtonProps, extActionButtonProps } from '@/extensions/components/ActionButton'
 
+import { ItemsGetArgs } from '@/extensions/block-type-selector'
+import { actionButtonProps, extActionButtonProps } from '@/extensions/components/ActionButton'
 import { omit } from '@/utils/utils'
 import { ActionMenuButtonItem } from "./types"
 
@@ -25,3 +27,9 @@ export const extActionButtonMenuProps = <T = any>() => ({
     required: true
   }
 } as const)
+
+export const extBlockTypeSelectorProps = {
+  ...extActionButtonMenuProps(),
+  items: { type: Function as PropType<((args: ItemsGetArgs) => ActionMenuButtonItem[])>, default: [] },
+  headingLevels: { type: Array<Level>, default: undefined }
+} as const

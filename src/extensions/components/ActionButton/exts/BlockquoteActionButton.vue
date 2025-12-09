@@ -1,18 +1,20 @@
 <script lang="ts" setup>
+import { BlockquoteMenuItem } from '../../MenuItem/blockquote'
 import ActionButton from '../src/index.vue'
 import { extActionButtonProps } from '../src/props'
 
-defineProps(extActionButtonProps)
+const props = defineProps(extActionButtonProps)
+const item = BlockquoteMenuItem({
+  editor: props.editor,
+  t: props.t,
+  isDisabled: props.isDisabled
+})
 </script>
 
 <template>
   <ActionButton
-    :editor="editor"
-    :action="() => editor.chain().focus().toggleBlockquote().run()"
-    :is-active="() => editor.isActive('blockquote') || false"
-    :disabled="!editor.can().toggleBlockquote()"
-    :tooltip="t('editor.blockquote.tooltip')"
-    icon="blockquote"
+    :editor="props.editor"
+    v-bind="{ ...item, tootip: item.title }"
   />
 </template>
 

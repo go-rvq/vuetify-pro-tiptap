@@ -1,12 +1,13 @@
 import { markRaw } from 'vue'
 import {
   BaseKit,
-  Blockquote,
+  Blockquote, BlockquoteMenuItem,
+  BlockTypeSelector,
   Bold,
   BulletList,
   Clear,
   Code,
-  CodeBlock,
+  CodeBlock, CodeBlockMenuItem,
   Color,
   createVuetifyProTipTap,
   defaultBubbleList,
@@ -67,6 +68,12 @@ export const vuetifyProTipTap = createVuetifyProTipTap({
           return defaultBubbleList(editor) // default customize bubble list
         }
       }
+    }),
+    BlockTypeSelector.configure({
+      items: ({ editor, t }) => [
+        BlockquoteMenuItem({ editor, t }),
+        CodeBlockMenuItem({ editor, t })
+      ]
     }),
     Bold,
     Italic,
