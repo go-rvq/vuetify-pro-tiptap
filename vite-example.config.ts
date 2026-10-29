@@ -31,9 +31,11 @@ export default ({ mode }) => {
       // })
     ],
     resolve: {
-      alias: {
-        '@': resolve(__dirname, 'src')
-      }
+      alias: [
+        { find: '@', replacement: resolve(__dirname, 'src') },
+        // the examples use the package itself (its lib: build:lib first)
+        { find: /^vuetify-pro-tiptap(\/.*)?$/, replacement: `${resolve(__dirname)}$1` }
+      ]
     },
     server: {
       port: Number.parseInt(env.VITE_PORT || '3000'),

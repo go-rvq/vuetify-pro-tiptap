@@ -10,15 +10,15 @@ dev:
 
 .PHONY: install
 install:
-	echo 'pnpm install' | $(docker_image_env) @exec -
+	echo 'bun install' | $(docker_image_env) @exec -
 
 .PHONY: build
 build:
-	echo 'pnpm run build:lib' | $(docker_image_env) @build_cmd
+	echo 'bun run build:lib' | $(docker_image_env) @build_cmd
 
 .PHONY: test
 test:
-	echo 'pnpm lint:css && pnpm lint:js && pnpm check:types' | $(docker_image_env) @build_cmd
+	echo 'bun run lint:css && bun run lint:js && bun run check:types' | $(docker_image_env) @build_cmd
 
 #.PHONY: commit
 #commit:

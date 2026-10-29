@@ -34,7 +34,7 @@ For Vuetify 2.x please use the latest version of [vuetify-pro-tiptap@1.X.X](http
 ## Installation
 ### NPM
 ```shell
-pnpm add vuetify-pro-tiptap
+bun add vuetify-pro-tiptap
 # or
 yarn add vuetify-pro-tiptap
 # or

@@ -16,7 +16,7 @@ export default antfu({
     'lib',
     '**/lib/**',
     'package-lock.json',
-    'pnpm-lock.yaml',
+    'bun.lock',
     'yarn.lock'
   ],
   formatters: {

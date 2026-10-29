@@ -86,7 +86,10 @@ export default defineConfig({
           'vuetify/components': 'VuetifyComp'
         }
       },
-      external: ['vue', 'vuetify', 'vuetify/components']
+      // tiptap and ProseMirror are the app's (peerDependencies): one copy of
+      // them in the page — a plugin, a decoration, a node of the app's are
+      // the editor's —, not one more in this bundle
+      external: ['vue', 'vuetify', 'vuetify/components', /^@tiptap\//, /^prosemirror-/]
     }
   }
 })

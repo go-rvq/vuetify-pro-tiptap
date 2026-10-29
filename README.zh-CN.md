@@ -34,7 +34,7 @@ Vuetify 2.x 请使用最新版本的 [vuetify-pro-tiptap@1.X.X](https://github.c
 ## 安装
 ### NPM安装
 ```shell
-pnpm add vuetify-pro-tiptap
+bun add vuetify-pro-tiptap
 # 或者
 yarn add vuetify-pro-tiptap
 # 或者
