@@ -80,6 +80,8 @@ export default antfu({
         math: 'always'
       }
     ],
-    'vue/custom-event-name-casing': ['error', 'kebab-case']
+    // kebab-case, but a v-model's events: update:<prop> (camelCase, as Vue
+    // names them)
+    'vue/custom-event-name-casing': ['error', 'kebab-case', { ignores: ['/^update:[a-z][a-zA-Z]*$/'] }]
   }
 })
