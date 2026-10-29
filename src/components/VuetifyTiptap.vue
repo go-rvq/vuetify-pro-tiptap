@@ -96,6 +96,8 @@ const sortExtensions = computed<AnyExtension[]>(() => {
 
   return [...exts, ...diff].map((k, i) => k.configure({ sort: i }))
 })
+// lastEmitted is the output the editor emitted last (its v-model's echo)
+let lastEmitted: unknown
 
 const editor = useEditor({
   content: props.modelValue,
@@ -113,6 +115,7 @@ const editor = useEditor({
   onUpdate: throttle<OnUpdate>(({ editor }) => {
     const output = getOutput(editor, props.output)
 
+    lastEmitted = output
     emit('update:modelValue', output)
 
     emit('change', { editor, output })
@@ -178,6 +181,10 @@ function getOutput(editor: CoreEditor, output: Props['output']) {
 
 const onValueChange = throttle((val: NonNullable<Props['modelValue']>) => {
   if (!editor.value) return
+
+  // the echo of what the editor emitted (the parent's v-model) is no change:
+  // set again, it would undo a change made since, not emitted yet (throttled)
+  if (lastEmitted !== undefined && isEqual(lastEmitted, val)) return
 
   const output = getOutput(editor.value, props.output)
 
