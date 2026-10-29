@@ -1,6 +1,6 @@
 .*
 node_modules
-lib
+# lib: the build, kept — what a git dependency installs (bun runs no prepare)
 dist
 dist-ssr
 *.local

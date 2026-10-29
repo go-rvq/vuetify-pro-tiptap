@@ -7,4 +7,7 @@ const config = yikoyu()
 // off, it is an unknown rule — an error on every file
 delete config.rules['scss/at-import-partial-extension']
 
+// the build (lib) is no source
+config.ignoreFiles = [...(config.ignoreFiles || []), 'lib/**']
+
 export default config
